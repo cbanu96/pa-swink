@@ -12,7 +12,7 @@ usage() {
 available_commands=(get set list)
 
 cmd_get() {
-	pacmd stat | grep "Default sink name: " | awk -F': ' '{print $2}'
+	pactl info | grep "Default Sink: " | awk -F': ' '{print $2}'
 }
 
 cmd_set() {

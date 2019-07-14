@@ -4,7 +4,7 @@
 command-line tool which helps switch the default (fallback) sink and move any
 currently active streams to the new sink.
 
-This is a simple wrapper on top of *pactl* and *pacmd*.
+This is a simple wrapper on top of *pactl*.
 
 ## Motivation
 
@@ -23,11 +23,20 @@ without having to manually migrate streams to use the new sink in the
 Place the provided shell script wherever you want and use it however you like.
 An example of integration in a window manager such as i3 is provided below.
 
+I usually place small tools like this one within `$HOME/.local/bin`:
+
+```
+	$ cp pa-swink ~/.local/bin
+	$ cp samples/dmenu_pa-swink ~/.local/bin
+```
+
 ## Usage
 
 ### Listing all sinks
 
-`pa-swink list` displays the sinks' names, as such:
+**Syntax**: `pa-swink list`
+
+**Example**:
 
 ```
 	$ pa-swink list
@@ -37,7 +46,9 @@ An example of integration in a window manager such as i3 is provided below.
 
 ### Switching to a new sink
 
-`pa-swink set <sink name>`
+**Syntax**: `pa-swink set <sink name>`
+
+**Example**:
 
 ```
 	$ pa-swink set alsa_output.pci-0000_1c_00.1.hdmi-stereo
@@ -46,7 +57,9 @@ An example of integration in a window manager such as i3 is provided below.
 
 ### Getting the current sink
 
-`pa-swink get`
+**Syntax**: `pa-swink get`
+
+**Example**:
 
 ```
 	$ pa-swink get
@@ -55,8 +68,24 @@ An example of integration in a window manager such as i3 is provided below.
 
 ## Integration with dmenu (and i3)
 
-**TODO**: This is in progress.
+The [samples/dmenu_pa-swink](../blob/master/samples/dmenu_pa-swink) file is a
+simple script showing how to use [dmenu](https://tools.suckless.org/dmenu/)
+together with *pa-swink*.
+
+In order to integrate this script with [i3](https://i3wm.org/), it's enough to
+add the following line to `$HOME/.config/i3/config`:
+
+```
+	bindsym $mod+s exec --no-startup-id "dmenu_pa-swink"
+```
 
 ## Integration with polybar
 
-**TODO**: This is in progress.
+A simple approach to writing the currently active sink to a polybar module is
+using `custom/script`:
+
+```
+	[module/pa-sink-description]
+	type = custom/script
+	exec = pactl list sinks | grep -A5 "Name: $(pa-swink get)" | grep Description | awk -F': ' '{print $2}'
+```

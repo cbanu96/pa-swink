@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# NOTE: Make sure that pa-swink is in $PATH.
+
+# Pass through the arguments to dmenu
+pa-swink list | dmenu $@ | xargs pa-swink set
