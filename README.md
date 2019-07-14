@@ -68,7 +68,7 @@ I usually place small tools like this one within `$HOME/.local/bin`:
 
 ## Integration with dmenu (and i3)
 
-The [samples/dmenu_pa-swink](../blob/master/samples/dmenu_pa-swink) file is a
+The [samples/dmenu_pa-swink](../master/samples/dmenu_pa-swink) file is a
 simple script showing how to use [dmenu](https://tools.suckless.org/dmenu/)
 together with *pa-swink*.
 
