@@ -1,0 +1,48 @@
+#!/bin/bash
+
+usage() {
+	cat <<-EOF
+	Usage: pa-swink <command> [args]
+	pa-swink get		Get the default sink.
+	pa-swink set		Set the default sink.
+	pa-swink list		List all default sinks.
+	EOF
+}
+
+available_commands=(get set list)
+
+cmd_get() {
+	pacmd stat | grep "Default sink name: " | awk -F': ' '{print $2}'
+}
+
+cmd_set() {
+	local sink="$1"
+	echo "Setting default sink to $sink..."
+	pactl set-default-sink "$sink"
+	pactl list short sink-inputs | awk '{print $1}' | while read idx; do
+		pactl move-sink-input "$idx" "$sink"
+	done
+}
+
+cmd_list() {
+	pactl list short sinks | awk '{print $2}' | sort
+}
+
+# No command given?
+
+if [[ $# -eq 0 ]]; then
+	usage
+	exit 1
+fi
+
+cmd="$1"
+shift 1
+
+# Invalid command?
+
+if [[ ! " ${available_commands[@]} " =~ " ${cmd} " ]]; then
+	usage
+	exit 1
+fi
+
+cmd_$cmd "$@"
